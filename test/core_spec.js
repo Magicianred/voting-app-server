@@ -81,6 +81,24 @@ describe('application logic', () => {
         entries: List.of('White Ribbon', 'Cache', 'Funny Games')
       }));
     });
+
+    it('marks winner when just one entry left', () => {
+      const state = Map({
+        vote: Map({
+          pair: List.of('Cache', 'Funny Games'),
+          tally: Map({
+            'Cache': 29,
+            'Funny Games':1089
+          })
+        }),
+        entries: List()
+      });
+      const nextState = next(state);
+      expect(nextState).to.equal(Map({
+        winner: 'Funny Games'
+      }));
+    });
+
   });
 
   describe('vote', () => {
