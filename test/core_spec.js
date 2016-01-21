@@ -25,6 +25,10 @@ describe('application logic', () => {
       }));
     });
 
+  });
+
+  describe('next', () => {
+
     it('takes next 2 entries under vote', () => {
       const state = Map({
         entries: List.of('Cache', 'Funny Games', 'Piano Teacher')
@@ -38,6 +42,45 @@ describe('application logic', () => {
       }));
     });
 
+    it('puts winner of current vote back to entries', () => {
+      const state = Map({
+        vote: Map({
+          pair: List.of('Cache', 'Funny Games'),
+          tally: Map({
+            'Cache': 89,
+            'Funny Games': 99
+          })
+        }),
+        entries: List.of('Piano Teacher', 'Code Unknown', 'White Ribbon')
+      });
+      const nextState = next(state);
+      expect(nextState).to.equal(Map({
+        vote: Map({
+          pair: List.of('Piano Teacher', 'Code Unknown')
+        }),
+        entries: List.of('White Ribbon', 'Funny Games')
+      }));
+    });
+
+    it('puts both from tied vote back to entries', () => {
+      const state = Map({
+        vote: Map({
+          pair: List.of('Cache', 'Funny Games'),
+          tally: Map({
+            'Cache': 343,
+            'Funny Games': 343
+          })
+        }),
+        entries: List.of('Piano Teacher', 'Code Unknown', 'White Ribbon')
+      });
+      const nextState = next(state);
+      expect(nextState).to.equal(Map({
+        vote: Map({
+          pair: List.of('Piano Teacher', 'Code Unknown')
+        }),
+        entries: List.of('White Ribbon', 'Cache', 'Funny Games')
+      }));
+    });
   });
 
   describe('vote', () => {
