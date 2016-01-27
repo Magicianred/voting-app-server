@@ -48,4 +48,29 @@ describe('reducer', () => {
       entries: []
     }));
   });
+
+  it('has an initial state', () => {
+    const action = {type: 'SET_ENTRIES', entries: ['Cache']};
+    const nextState = reducer(undefined, action);
+    expect(nextState).to.equal(fromJS({
+      entries: ['Cache']
+    }));
+  });
+      
+});
+
+it('can be used with reduce', () => {
+  const actions = [
+    {type: 'SET_ENTRIES', entries: ['Cache', 'Funny Games']},
+    {type: 'NEXT'},
+    {type: 'VOTE', entry: 'Cache'},
+    {type: 'VOTE', entry: 'Funny Games'},
+    {type: 'VOTE', entry: 'Cache'},
+    {type: 'NEXT'}
+  ];
+  const finalState = actions.reduce(reducer, Map());
+
+  expect(finalState).to.equal(fromJS({
+    winner: 'Cache'
+  }));
 });
